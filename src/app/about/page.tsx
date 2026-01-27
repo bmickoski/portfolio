@@ -8,7 +8,14 @@ export default function AboutPage() {
           measurable performance, and safer integrations.
         </p>
       </header>
-
+      <a
+        href="/Bojan-Mickoski-CV.pdf"
+        className="inline-flex rounded-md border px-4 py-2 text-sm hover:opacity-80"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Download CV
+      </a>
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">How I work</h2>
         <ul className="list-disc space-y-2 pl-5 text-gray-700">
