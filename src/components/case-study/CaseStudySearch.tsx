@@ -61,7 +61,7 @@ export function CaseStudySearch({ items }: { items: CaseStudy[] }) {
           <Link
             key={i.href}
             href={i.href}
-            className="block rounded-xl border p-5 hover:shadow-sm"
+            className="hover-lift block rounded-xl border p-5 hover:shadow-sm"
           >
             <div className="font-semibold">{i.title}</div>
             <div className="mt-1 text-sm text-gray-700">{i.subtitle}</div>

@@ -86,3 +86,11 @@ html[data-theme="dark"] {
 .border {
   border-color: var(--border);
 }
+
+/* subtle hover lift */
+.hover-lift {
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
