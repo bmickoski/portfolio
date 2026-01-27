@@ -87,10 +87,19 @@ html[data-theme="dark"] {
   border-color: var(--border);
 }
 
-/* subtle hover lift */
-.hover-lift {
-  transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+.case-prose pre {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  overflow: auto;
 }
-.hover-lift:hover {
-  transform: translateY(-2px);
+
+.case-prose code {
+  font-size: 0.9em;
+}
+
+.case-prose pre code {
+  font-size: 0.85rem;
+  line-height: 1.6;
 }

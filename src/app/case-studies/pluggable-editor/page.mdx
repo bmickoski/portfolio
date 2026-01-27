@@ -1,0 +1,136 @@
+<BackToCaseStudies />
+
+<CaseStudyHeader
+  title="Pluggable rich text editor host"
+  subtitle="A generic editor wrapper with stable contracts (CVA-friendly) and swapable implementations."
+  tags={["Architecture", "Component Design", "Forms", "Extensibility"]}
+/>
+
+> Some details are generalized to respect confidentiality.
+
+## Context
+
+Rich text appears in multiple areas of the product. The immediate need was one editor implementation, but the long-term requirement was to keep the UI flexible: different teams, different use cases, and future editor swaps without refactoring every form and screen.
+
+## The problem
+
+A rich text editor is rarely “just a component”:
+
+- it must integrate cleanly with form APIs
+- it must handle value updates predictably (no surprising loops)
+- it must allow future replacement (editor A today, editor B tomorrow)
+- it must remain testable and maintainable
+
+## Decision & tradeoffs
+
+<DecisionRecord
+  problem="Provide rich text editing with a stable, reusable integration surface while allowing different editor implementations over time."
+  constraints={[
+    "Must work as a form field (ControlValueAccessor-friendly)",
+    "Editor should be swappable without rewriting consumers",
+    "Avoid lifecycle traps (double updates / ExpressionChanged issues)",
+    "Keep the integration testable without relying on editor internals",
+  ]}
+  options={[
+    {
+      title: "Hard-code a single editor everywhere",
+      summary:
+        "Fast to ship, but tightly couples the app to one vendor and makes replacement expensive.",
+    },
+    {
+      title:
+        "Build a wrapper per editor (TinyMCE wrapper, Quill wrapper, etc.)",
+      summary:
+        "Better than hard-coding, but consumers still depend on editor-specific APIs and patterns.",
+    },
+    {
+      title: "Generic editor host + pluggable implementation",
+      summary:
+        "One stable contract for consumers; editor specifics stay behind an adapter boundary.",
+    },
+  ]}
+  decision="Implement a generic editor host that exposes a stable contract to consumers (value in/out, disabled state, config), while loading editor implementations via a pluggable adapter boundary."
+  rationale={[
+    "Consumers integrate with one component interface (stable)",
+    "Editor implementations can evolve independently behind the boundary",
+    "Testing focuses on contract behavior rather than vendor internals",
+  ]}
+/>
+
+## Architecture
+
+<Mermaid
+  chart={`
+flowchart LR
+  A[Forms and Screens] --> B[Generic Editor Host]
+  B --> C[Editor Contract: value, disabled, events]
+  C --> D[TinyMCE Adapter]
+  C --> E[Other Editor Adapter]
+  B --> F[Validation and Field Rules]
+`}
+/>
+
+## Contract surface (NDA-safe)
+
+The key idea was keeping a small, stable integration boundary between “screens/forms” and the editor vendor.
+
+```ts
+// What screens/forms talk to (stable)
+export type RichTextFieldProps = {
+  value: string;
+  disabled?: boolean;
+  onChange: (next: string) => void;
+  onBlur?: () => void;
+  config?: Record<string, unknown>;
+};
+
+// What editor implementations must provide (swappable)
+export interface RichTextEditorAdapter {
+  mount(el: HTMLElement, config?: Record<string, unknown>): void;
+  setValue(value: string): void;
+  setDisabled(disabled: boolean): void;
+  onChange(cb: (next: string) => void): void;
+  destroy(): void;
+}
+```
+
+## Implementation highlights
+
+- **Stable contract:** a single integration surface for value, disabled state, and changes (so screens/forms remain consistent)
+- **Adapter boundary:** editor vendor specifics live behind a small interface
+- **Predictable updates:** value changes flow one way; external writes don’t trigger loops
+- **Test strategy:** unit tests verify the host contract (value propagation, disabled state, change events), not vendor DOM behaviors
+
+## Outcomes
+
+<Outcomes
+  items={[
+    {
+      label: "Swap-friendly architecture",
+      detail:
+        "Editor implementations can be replaced without refactoring every consuming screen.",
+    },
+    {
+      label: "Stable form integration",
+      detail:
+        "Consistent behavior across form usage patterns (including validation/disabled states).",
+    },
+    {
+      label: "Reduced coupling",
+      detail:
+        "Vendor-specific configuration and quirks stay behind an adapter boundary.",
+    },
+    {
+      label: "Better testability",
+      detail:
+        "Tests validate the contract and integration behavior, not vendor internals.",
+    },
+  ]}
+/>
+
+## What I’d do next
+
+- Add a lightweight “adapter compliance checklist” (events, edge cases, accessibility)
+- Add an integration harness story page (example forms + validation scenarios)
+- Create a migration guide for teams moving from legacy editors to the host
+```

@@ -1,28 +1,6 @@
 import Link from "next/link";
-
-const tiles = [
-  {
-    title: "Incremental modernization",
-    meta: "AngularJS → Web Components → Angular",
-    desc: "A migration strategy that reduces rewrite risk while keeping delivery moving through stable contracts and incremental rollout.",
-    href: "/case-studies/incremental-modernization",
-    tags: ["Architecture", "Migration", "Web Components"],
-  },
-  {
-    title: "UI platform engineering",
-    meta: "Monorepo + versioning + Storybook",
-    desc: "Shared UI libraries with predictable releases, living documentation, and workflows that scale across multiple apps.",
-    href: "/case-studies/ui-platform",
-    tags: ["UI Platform", "Monorepo", "Release Engineering"],
-  },
-  {
-    title: "Performance + reliability",
-    meta: "≈30% perf + contracts + mocking",
-    desc: "Measured performance improvements plus guardrails (contracts + mocks) to reduce integration surprises in production.",
-    href: "/case-studies/performance-reliability",
-    tags: ["Performance", "Reliability", "Testing"],
-  },
-];
+import { caseStudies } from "@/content/caseStudies";
+import { CaseStudyRotator } from "@/components/case-study/CaseStudyRotator";
 
 const skills = [
   "UI Architecture",
@@ -38,7 +16,6 @@ const skills = [
 export default function HomePage() {
   return (
     <div className="space-y-12">
-      {/* Hero */}
       <section className="space-y-5">
         <h1 className="text-4xl font-semibold leading-tight tracking-tight">
           I build UI architecture that scales — and stays predictable in production.
@@ -75,18 +52,29 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Proof line (lightweight, high-signal) */}
         <div className="rounded-xl border p-4">
           <p className="text-sm leading-6" style={{ color: "var(--muted)" }}>
-            Recent themes: <span className="font-medium" style={{ color: "var(--fg)" }}>incremental migration without rewrites</span>,{" "}
-            <span className="font-medium" style={{ color: "var(--fg)" }}>shared UI platforms</span>, and{" "}
-            <span className="font-medium" style={{ color: "var(--fg)" }}>~30% performance improvements</span> with{" "}
-            <span className="font-medium" style={{ color: "var(--fg)" }}>contract-based reliability</span>.
+            Recent themes:{" "}
+            <span className="font-medium" style={{ color: "var(--fg)" }}>
+              incremental migration without rewrites
+            </span>
+            ,{" "}
+            <span className="font-medium" style={{ color: "var(--fg)" }}>
+              shared UI platforms
+            </span>{" "}
+            and{" "}
+            <span className="font-medium" style={{ color: "var(--fg)" }}>
+              measurable performance improvements
+            </span>{" "}
+            with{" "}
+            <span className="font-medium" style={{ color: "var(--fg)" }}>
+              contract-based reliability
+            </span>
+            .
           </p>
         </div>
       </section>
 
-      {/* Skills snapshot */}
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">Focus areas</h2>
         <div className="flex flex-wrap gap-2">
@@ -98,37 +86,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Case study tiles */}
-      <section className="space-y-4">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="text-lg font-semibold">Selected case studies</h2>
-          <Link href="/case-studies" className="text-sm hover:underline" style={{ color: "var(--muted)" }}>
-            See all →
-          </Link>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {tiles.map((t) => (
-            <Link key={t.href} href={t.href} className="hover-lift rounded-xl border p-5 hover:shadow-sm">
-              <div className="text-xs" style={{ color: "var(--muted)" }}>
-                {t.meta}
-              </div>
-              <h3 className="mt-2 font-semibold">{t.title}</h3>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--muted)" }}>
-                {t.desc}
-              </p>
-
-              <div className="mt-3 flex flex-wrap gap-2">
-                {t.tags.map((tag) => (
-                  <span key={tag} className="rounded-full border px-3 py-1 text-xs">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <CaseStudyRotator items={caseStudies} count={3} />
     </div>
   );
 }

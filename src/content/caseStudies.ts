@@ -27,4 +27,11 @@ export const caseStudies: CaseStudy[] = [
     href: "/case-studies/performance-reliability",
     tags: ["Performance", "Reliability", "Testing"],
   },
+  {
+    title: "Pluggable rich text editor host",
+    subtitle: "Generic editor wrapper with stable contracts and swapable implementations.",
+    href: "/case-studies/pluggable-editor",
+    tags: ["Architecture", "Component Design", "Forms", "Extensibility"],
+  },
+
 ];
