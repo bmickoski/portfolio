@@ -1,0 +1,108 @@
+<BackToCaseStudies />
+
+<CaseStudyHeader
+  title="Performance + reliability in production frontends"
+  subtitle="≈30% performance improvement plus contract testing + API mocking."
+  tags={["Performance", "Reliability", "Testing"]}
+/>
+
+> Some details are generalized to respect confidentiality.
+
+## Context
+
+As the frontend grew, two risks became visible:
+
+- performance degraded (load time + interaction latency)
+- integrations broke unexpectedly when APIs changed
+
+## The problem
+
+Fixing performance alone helps UX but doesn’t prevent integration surprises. Adding reliability checks alone prevents breakages but doesn’t solve slow UI. We needed a combined production-quality track.
+
+## Decision & tradeoffs
+
+<DecisionRecord
+  problem="Improve real user performance while also reducing integration breakage between frontend and backend."
+  constraints={[
+    "Changes needed to be safe and incremental",
+    "Performance issues were spread across multiple areas",
+    "Frontend and backend work had to progress in parallel",
+  ]}
+  options={[
+    {
+      title: "Only optimize code (no safety nets)",
+      summary: "May improve speed, but integration surprises still happen.",
+    },
+    {
+      title: "Only add contract tests (no perf work)",
+      summary: "Improves reliability, but UX remains slow.",
+    },
+    {
+      title: "Performance improvements + contract discipline",
+      summary:
+        "Treat performance and reliability as a single production-quality track.",
+    },
+  ]}
+  decision="Run a production-quality track: measure + optimize performance, and add integration guardrails using contract tests and API mocking."
+  rationale={[
+    "Performance work must be measurable and targeted",
+    "Contracts catch breaking API changes early",
+    "Mocking enables parallel development without blocking",
+  ]}
+/>
+
+## Implementation highlights
+
+### Performance
+
+- Reduce unnecessary render work where possible
+- Apply memoization patterns for repeated computations
+- Use lazy-loading to reduce initial load cost
+
+### Reliability
+
+- Contract testing to detect breaking API changes earlier
+- API mocking to unblock frontend work during backend changes
+
+
+## Architecture
+
+<Mermaid
+  chart={`
+flowchart LR
+  FE[Frontend App] --> PERF[Perf Track<br/>CD + Memoization + Lazy Loading]
+  FE --> CT[Contract Tests]
+  FE --> MS[Mock Server]
+  CT --> API[Backend APIs]
+  MS --> API
+`}
+/>
+
+## Outcomes
+
+<Outcomes
+  items={[
+    {
+      label: "≈30% performance improvement",
+      detail: "Targeted optimizations improved load/interaction performance.",
+    },
+    {
+      label: "Fewer integration surprises",
+      detail: "Contract tests surfaced breaking changes earlier.",
+    },
+    {
+      label: "Parallel FE/BE delivery",
+      detail: "Mocking reduced blocking and improved iteration speed.",
+    },
+    {
+      label: "More predictable releases",
+      detail: "Guardrails reduced regressions and production risk.",
+    },
+  ]}
+/>
+
+## What I’d do next
+
+- Add performance budgets and CI guardrails (e.g., bundle size, key interactions)
+- Expand contract coverage to the highest-risk endpoints first
+- Add production monitoring to catch regressions earlier

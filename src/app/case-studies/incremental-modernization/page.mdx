@@ -1,0 +1,91 @@
+<BackToCaseStudies />
+
+<CaseStudyHeader
+  title="Incremental modernization without a rewrite"
+  subtitle="AngularJS → Web Components → Angular with contract-driven boundaries."
+  tags={["Architecture", "Migration", "Web Components"]}
+/>
+
+> Some details are generalized to respect confidentiality.
+
+## Context
+
+Legacy AngularJS modules were slowing down safe evolution of the product. Modernization needed to happen while continuing to deliver features.
+
+## The problem
+
+We needed to modernize a legacy area without creating rewrite risk, breaking user workflows, or blocking teams that were shipping features.
+
+## Decision & tradeoffs
+
+<DecisionRecord
+  problem="Modernize a legacy AngularJS area while continuing delivery, without introducing rewrite risk."
+  constraints={[
+    "No stop-the-world rewrite",
+    "Stable behavior for existing users",
+    "Support parallel work across teams",
+  ]}
+  options={[
+    {
+      title: "Big-bang rewrite",
+      summary: "High risk, long time-to-value, hard to validate incrementally.",
+    },
+    {
+      title: "New shell hosting everything",
+      summary: "Two worlds, complex ownership of routing/auth/global services.",
+    },
+    {
+      title: "Incremental replacement via Web Components",
+      summary: "Clear boundaries, measurable progress, lowest migration risk.",
+    },
+  ]}
+  decision="Use Web Components as the integration boundary, then migrate module-by-module to Angular behind stable contracts."
+  rationale={[
+    "Hard input/output contracts reduce coupling",
+    "Enables incremental rollout and rollback per module",
+    "Allows teams to modernize in parallel with fewer integration surprises",
+  ]}
+/>
+
+## Approach
+
+- Define a component contract (inputs/outputs, error states, loading states)
+- Wrap legacy entry points with a stable boundary
+- Replace modules incrementally behind the contract
+- Keep behavior stable while improving internal structure
+
+## Architecture
+
+<Mermaid
+  chart={`
+flowchart LR
+  A[Legacy AngularJS Area] --> B[Web Components Boundary]
+  B --> C[Modern Angular Modules]
+  C --> D[Backend APIs]
+`}
+/>
+
+## Outcomes
+
+<Outcomes
+  items={[
+    {
+      label: "Reduced migration risk",
+      detail: "Incremental replacement instead of a rewrite.",
+    },
+    {
+      label: "Clearer module boundaries",
+      detail: "Explicit contracts improved maintainability and team ownership.",
+    },
+    {
+      label: "Faster parallel delivery",
+      detail: "Teams could move independently with stable integration points.",
+    },
+  ]}
+/>
+
+## What I’d do next
+
+- Standardize a “contract checklist” per component (inputs/outputs/error + loading)
+- Add a consistent rollout strategy (feature flag/canary) per module
+- Create a migration playbook to make future modules faster to convert

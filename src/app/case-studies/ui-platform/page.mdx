@@ -1,0 +1,75 @@
+<BackToCaseStudies />
+
+<CaseStudyHeader
+  title="Building a scalable UI platform"
+  subtitle="Monorepo libraries, predictable versioning, and Storybook as a product."
+  tags={["UI Platform", "Monorepo", "Release Engineering"]}
+/>
+
+> Some details are generalized to respect confidentiality.
+
+## Context
+Multiple applications needed shared UI building blocks. Over time, duplication and inconsistent patterns slowed development and made upgrades risky.
+
+## The problem
+We needed a scalable way to share UI components across multiple apps without:
+- duplicated components and fixes that don’t propagate
+- inconsistent UX patterns across products
+- surprise breakages during upgrades
+- slow onboarding and “tribal knowledge” dependency
+
+## Decision & tradeoffs
+
+<DecisionRecord
+  problem="Share UI components across multiple applications with predictable upgrades and self-serve documentation."
+  constraints={[
+    "Multiple apps consuming the same UI components",
+    "Frequent changes required predictable release discipline",
+    "Onboarding needed to be fast and self-serve",
+  ]}
+  options={[
+    { title: "Copy/paste components per app", summary: "Fast initially, but duplication grows and UX diverges quickly." },
+    { title: "Shared repo without release discipline", summary: "Shared code, but upgrades become unpredictable and risky." },
+    { title: "Monorepo packages + versioning + Storybook", summary: "Reusable libraries with controlled releases and living docs." },
+  ]}
+  decision="Create shared UI libraries as versioned packages in a monorepo, and use Storybook as the public interface for usage patterns and examples."
+  rationale={[
+    "Versioned packages make upgrades intentional instead of accidental",
+    "Storybook becomes the ‘product surface’ for shared UI (docs + examples)",
+    "Reusable primitives reduce duplicated effort and inconsistency",
+  ]}
+/>
+
+## Implementation highlights
+- Shared UI packages with clear ownership and a predictable release flow
+- Versioning/publishing that reduces “surprise breaks” for consumers
+- Storybook stories used as documentation and examples for teams
+
+## Architecture
+
+<Mermaid
+  chart={`
+flowchart TB
+  A[Applications] --> B[Shared UI Packages]
+  B --> C[Monorepo]
+  C --> D[CI Release Pipeline]
+  D --> E[Package Registry]
+  B --> F[Storybook Docs]
+`}
+/>
+
+## Outcomes
+
+<Outcomes
+  items={[
+    { label: "Faster delivery through reuse", detail: "Teams built features by composing shared primitives." },
+    { label: "More consistent UX", detail: "Common components reduced divergence across apps." },
+    { label: "Predictable upgrades", detail: "Release discipline made updates intentional and safer." },
+    { label: "Better onboarding", detail: "Examples and stories made the system self-serve." },
+  ]}
+/>
+
+## What I’d do next
+- Add visual regression tests per Storybook story
+- Establish a breaking-change policy + migration guide template per release
+- Add “golden path” starter templates for new app teams
