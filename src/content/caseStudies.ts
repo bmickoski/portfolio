@@ -33,5 +33,10 @@ export const caseStudies: CaseStudy[] = [
     href: "/case-studies/pluggable-editor",
     tags: ["Architecture", "Component Design", "Forms", "Extensibility"],
   },
-
+  {
+    title: "TeamPulse: full-stack SaaS from scratch",
+    subtitle: "Multi-tenant team productivity dashboard with auth, RBAC, real-time SSE, and intercepting route modals.",
+    href: "/case-studies/teampulse",
+    tags: ["Next.js", "React", "Full-Stack", "Auth", "Real-time"],
+  },
 ];

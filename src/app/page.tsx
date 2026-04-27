@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { caseStudies } from "@/content/caseStudies";
 import { CaseStudyRotator } from "@/components/case-study/CaseStudyRotator";
+import { ProjectsGrid } from "@/components/projects/ProjectsGrid";
 
 const skills = [
   "UI Architecture",
@@ -17,14 +18,19 @@ export default function HomePage() {
   return (
     <div className="space-y-12">
       <section className="space-y-5">
-        <h1 className="text-4xl font-semibold leading-tight tracking-tight">
-          I build UI architecture that scales — and stays predictable in production.
+        <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
+          I build UI architecture that scales and stays predictable in production.
         </h1>
 
         <p className="max-w-2xl text-base leading-7" style={{ color: "var(--muted)" }}>
           Frontend engineer focused on architecture decisions, incremental modernization,
           performance, and reliability. I like explicit tradeoffs, clear boundaries,
           and measurable outcomes.
+        </p>
+
+        <p className="flex items-center gap-2 text-sm" style={{ color: "var(--muted)" }}>
+          <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
+          Open to new roles
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -85,6 +91,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <ProjectsGrid />
 
       <CaseStudyRotator items={caseStudies} count={3} />
     </div>

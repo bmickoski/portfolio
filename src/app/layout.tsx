@@ -1,4 +1,5 @@
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { MobileNav } from "@/components/MobileNav";
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
@@ -56,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header className="border-b">
+        <header className="relative border-b">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
             <Link href="/" className="font-semibold">
               Bojan Mickoski
@@ -64,6 +65,9 @@ export default function RootLayout({
 
             <div className="flex items-center gap-3">
               <nav className="hidden gap-6 text-sm md:flex">
+                <Link className="hover:underline" href="/#projects">
+                  Projects
+                </Link>
                 <Link className="hover:underline" href="/case-studies">
                   Case Studies
                 </Link>
@@ -77,7 +81,7 @@ export default function RootLayout({
 
               <a
                 href="/Bojan-Mickoski-CV.pdf"
-                className="rounded-md bg-black px-3 py-2 text-sm text-white hover:opacity-90"
+                className="hidden rounded-md bg-black px-3 py-2 text-sm text-white hover:opacity-90 md:inline-flex"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -85,17 +89,36 @@ export default function RootLayout({
               </a>
 
               <ThemeToggle />
+              <MobileNav />
             </div>
           </div>
         </header>
         <main className="mx-auto max-w-5xl px-4 py-10">{children}</main>
 
         <footer className="border-t">
-          <div className="mx-auto max-w-5xl px-4 py-6 text-sm" style={{ color: "var(--muted)" }}>
+          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-6 text-sm sm:flex-row sm:items-center sm:justify-between" style={{ color: "var(--muted)" }}>
             <p>
-              Some details are generalized to respect confidentiality. Happy to
-              discuss deeper technical decisions and tradeoffs in conversation.
+              Some details are generalized to respect confidentiality. Happy to discuss
+              deeper decisions and tradeoffs in conversation.
             </p>
+            <div className="flex shrink-0 gap-4">
+              <a
+                href="https://www.linkedin.com/in/bojan-mickoski-b756a8ab/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:underline"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://github.com/bmickoski"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:underline"
+              >
+                GitHub
+              </a>
+            </div>
           </div>
         </footer>
       </body>

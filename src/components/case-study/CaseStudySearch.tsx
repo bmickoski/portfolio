@@ -64,7 +64,7 @@ export function CaseStudySearch({ items }: { items: CaseStudy[] }) {
             className="hover-lift block rounded-xl border p-5 hover:shadow-sm"
           >
             <div className="font-semibold">{i.title}</div>
-            <div className="mt-1 text-sm text-gray-700">{i.subtitle}</div>
+            <div className="mt-1 text-sm" style={{ color: "var(--muted)" }}>{i.subtitle}</div>
 
             <div className="mt-3 flex flex-wrap gap-2">
               {i.tags.map((t) => (
@@ -77,7 +77,7 @@ export function CaseStudySearch({ items }: { items: CaseStudy[] }) {
         ))}
 
         {filtered.length === 0 ? (
-          <div className="rounded-xl border p-5 text-sm text-gray-700">
+          <div className="rounded-xl border p-5 text-sm" style={{ color: "var(--muted)" }}>
             No matches. Try a different keyword or tag.
           </div>
         ) : null}

@@ -22,12 +22,12 @@
 .case-prose ul,
 .case-prose ol,
 .case-prose blockquote {
-  color: rgb(55 65 81); /* gray-700 */
+  color: var(--muted);
   line-height: 1.75;
 }
 
 .case-prose blockquote {
-  border-left: 3px solid rgb(229 231 235); /* gray-200 */
+  border-left: 3px solid var(--border);
   padding-left: 1rem;
   font-style: italic;
   margin: 1rem 0;

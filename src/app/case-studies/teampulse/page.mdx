@@ -1,0 +1,158 @@
+export const metadata = {
+  title: "TeamPulse: full-stack SaaS from scratch",
+  description:
+    "Building a multi-tenant team productivity SaaS with Next.js 15, React 19, SSE real-time feed, intercepting route modals, and role-based access.",
+};
+
+<BackToCaseStudies />
+
+<CaseStudyHeader
+  title="TeamPulse: full-stack SaaS from scratch"
+  subtitle="Multi-tenant team productivity dashboard built with Next.js 15 and React 19."
+  tags={["Next.js", "React", "Full-Stack", "Auth", "Real-time"]}
+/>
+
+## Context
+
+I built TeamPulse as a side project to get hands-on with the React/Next.js ecosystem. The goal was not just a tutorial app but something that covers real production concerns: auth, role-based access, real-time updates, and patterns like intercepting routes that you rarely see in beginner resources.
+
+The app lets teams create organizations, invite members, and track projects (called pulses) with status changes, comments, and a live activity feed.
+
+## Tech stack
+
+Next.js 15 (App Router), React 19, TypeScript, Drizzle ORM on Neon (serverless Postgres), NextAuth v5, TanStack Query v5, Zustand, Tailwind CSS v4, shadcn/ui, Vitest.
+
+## Decisions
+
+### Modal pattern: intercepting routes vs. a plain dialog
+
+The pulses list needed a detail view. Three options: navigate to a separate page, open a dialog over the list, or use Next.js intercepting routes.
+
+<DecisionRecord
+  problem="Show pulse details without losing the list context, while keeping a shareable direct URL."
+  constraints={[
+    "Direct URL to a pulse must still work (for sharing or page reload)",
+    "Navigating from the list should feel like a modal, not a full page change",
+    "No nested interactive elements (card click + edit button both need to work)",
+  ]}
+  options={[
+    {
+      title: "Navigate to a separate detail page",
+      summary: "Simple, but loses list context on each click.",
+    },
+    {
+      title: "Open a dialog from client state",
+      summary: "Keeps list visible, but the URL stays on the list page, so direct links don't work.",
+    },
+    {
+      title: "Intercepting route with a parallel route slot",
+      summary: "Modal on list navigation, full page on direct URL. Best of both.",
+    },
+  ]}
+  decision="Intercepting route at @modal/(.)pulses/[id] with a fallback full detail page at pulses/[id]."
+  rationale={[
+    "Direct URLs work naturally — Next.js falls through to the full page when there is no interception",
+    "List stays visible during modal open, which is the better UX for quick reviews",
+    "The same data-fetching logic is shared between the modal and the full page",
+  ]}
+/>
+
+One side effect: a Radix `ScrollArea` lock was adding padding to the body on modal open, shifting the layout. Fixed with a one-line CSS override on `[data-scroll-locked]`.
+
+### Real-time feed: SSE vs. polling vs. WebSockets
+
+The activity feed needed to update live when a team member creates or edits a pulse.
+
+<DecisionRecord
+  problem="Push activity updates to all connected clients without a dedicated WebSocket server."
+  constraints={[
+    "Deployed on Vercel (no persistent connections between requests)",
+    "Low event frequency (team activity, not high-throughput)",
+    "Keep infrastructure simple, no separate real-time service",
+  ]}
+  options={[
+    {
+      title: "Client polling",
+      summary: "Works everywhere, but wastes requests when nothing has changed.",
+    },
+    {
+      title: "WebSockets",
+      summary: "True bidirectional push, but needs a persistent server (not suitable for serverless).",
+    },
+    {
+      title: "Server-Sent Events (SSE)",
+      summary: "One-way push over HTTP, works fine on serverless with streaming responses.",
+    },
+  ]}
+  decision="SSE via a streaming Route Handler that writes events on a 3-second interval."
+  rationale={[
+    "No extra infrastructure required",
+    "HTTP streaming works on Vercel with the correct config",
+    "One-way is fine here since clients only receive, not send",
+  ]}
+/>
+
+### Role-based access: where to enforce
+
+Owner/member roles needed to gate team management, org settings, and destructive actions. The question was where to enforce: middleware, server action, or UI.
+
+The answer was all three, at different layers:
+
+- **Middleware** redirects unauthenticated requests before they reach any route
+- **Server actions** re-validate the session and role on every mutation
+- **UI** hides controls that the current role cannot use
+
+The UI gating is a convenience. The server action guard is the actual security layer. Middleware handles the unauthenticated case early.
+
+## Architecture
+
+<Mermaid
+  chart={`
+flowchart TD
+  A[Browser] --> B[Middleware: auth check]
+  B --> C[Server Components: data fetch]
+  C --> D[Client Components: TanStack Query + Zustand]
+  D -->|mutation| E[Server Actions: validate + write]
+  E --> F[Neon Postgres via Drizzle]
+  F -->|revalidate| C
+  G[SSE Route Handler] -->|stream| D
+`}
+/>
+
+## Implementation notes
+
+- **Server Components + Suspense**: data fetching happens on the server per route segment, with Suspense boundaries for the dashboard stats and chart to stream independently
+- **Server Actions with two-layer validation**: client validates with React Hook Form + Zod before submitting; server action re-validates the same schema and checks session
+- **Optimistic UI**: TanStack Query cache invalidation after mutations; removed the optimistic update for edits after discovering the infinite query cache shape (`InfiniteData`) is not a flat array
+- **Infinite scroll**: `useInfiniteQuery` with URL-based status filter via `nuqs`; `IntersectionObserver` on the last card to trigger the next page
+- **Testing**: Vitest + React Testing Library; pure utility functions (like `relativeTime`) tested with `vi.useFakeTimers()` and `vi.setSystemTime()` for deterministic time assertions
+
+## Outcomes
+
+<Outcomes
+  items={[
+    {
+      label: "Full multi-tenant auth",
+      detail: "Sign-up, sign-in, org creation, member invites, and role checks across middleware, server actions, and UI.",
+    },
+    {
+      label: "Intercepting route modal",
+      detail: "Pulse detail opens as a modal from the list, falls back to a full page on direct URL or reload.",
+    },
+    {
+      label: "Live activity feed",
+      detail: "SSE pushes new events to connected clients without polling or a separate real-time service.",
+    },
+    {
+      label: "Tested utility layer",
+      detail: "Pure functions covered by Vitest unit tests; component integration tests with RTL.",
+    },
+  ]}
+/>
+
+## What I'd do next
+
+- Add notifications (email or in-app) when a pulse is assigned or status changes
+- Replace the 3-second SSE poll with a proper push trigger from the server action
+- Add E2E tests for the auth and modal flows with Playwright
+- Extract the org/member management into a reusable pattern for other SaaS projects
