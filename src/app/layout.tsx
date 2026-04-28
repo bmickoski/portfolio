@@ -56,6 +56,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `try{var t=localStorage.getItem('theme');if(t==='dark'||(t===null&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.dataset.theme='dark';}}catch(e){}`
+        }} />
+      </head>
       <body>
         <header className="relative border-b">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
@@ -81,7 +86,7 @@ export default function RootLayout({
 
               <a
                 href="/Bojan-Mickoski-CV.pdf"
-                className="hidden rounded-md bg-black px-3 py-2 text-sm text-white hover:opacity-90 md:inline-flex"
+                className="btn-primary hidden rounded-md px-3 py-2 text-sm hover:opacity-90 md:inline-flex"
                 target="_blank"
                 rel="noreferrer"
               >

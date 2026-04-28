@@ -29,13 +29,13 @@ export function DecisionRecord(props: {
       <div className="mt-4 space-y-4 text-sm">
         <div>
           <div className="font-medium">Problem</div>
-          <p className="mt-1 text-gray-700">{problem}</p>
+          <p className="mt-1" style={{ color: "var(--muted)" }}>{problem}</p>
         </div>
 
         {constraints?.length ? (
           <div>
             <div className="font-medium">Constraints</div>
-            <ul className="mt-1 list-disc space-y-1 pl-5 text-gray-700">
+            <ul className="mt-1 list-disc space-y-1 pl-5" style={{ color: "var(--muted)" }}>
               {constraints.map((c) => (
                 <li key={c}>{c}</li>
               ))}
@@ -47,22 +47,22 @@ export function DecisionRecord(props: {
           <div className="font-medium">Options considered</div>
           <ul className="mt-2 space-y-2">
             {options.map((o) => (
-              <li key={o.title} className="rounded-lg bg-gray-50 p-3">
+              <li key={o.title} className="rounded-lg p-3" style={{ background: "var(--card)" }}>
                 <div className="font-medium">{o.title}</div>
                 {o.summary ? (
-                  <div className="mt-1 text-gray-700">{o.summary}</div>
+                  <div className="mt-1" style={{ color: "var(--muted)" }}>{o.summary}</div>
                 ) : null}
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="rounded-lg border bg-white p-3">
+        <div className="rounded-lg border p-3" style={{ background: "var(--card)" }}>
           <div className="font-medium">Decision</div>
-          <p className="mt-1 text-gray-700">{decision}</p>
+          <p className="mt-1" style={{ color: "var(--muted)" }}>{decision}</p>
 
           <div className="mt-3 font-medium">Why</div>
-          <ul className="mt-1 list-disc space-y-1 pl-5 text-gray-700">
+          <ul className="mt-1 list-disc space-y-1 pl-5" style={{ color: "var(--muted)" }}>
             {rationale.map((r) => (
               <li key={r}>{r}</li>
             ))}

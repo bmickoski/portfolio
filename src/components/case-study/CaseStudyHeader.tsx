@@ -8,7 +8,7 @@ export function CaseStudyHeader(props: {
       <div>
         <h1 className="text-3xl font-semibold leading-tight">{props.title}</h1>
         {props.subtitle ? (
-          <p className="mt-2 max-w-2xl text-gray-700">{props.subtitle}</p>
+          <p className="mt-2 max-w-2xl" style={{ color: "var(--muted)" }}>{props.subtitle}</p>
         ) : null}
       </div>
 

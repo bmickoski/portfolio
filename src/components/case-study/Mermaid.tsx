@@ -42,17 +42,17 @@ export function Mermaid({ chart }: { chart: string }) {
     return (
       <div className="not-prose rounded-xl border p-4">
         <div className="text-sm font-medium">Diagram error</div>
-        <pre className="mt-2 overflow-auto text-xs text-gray-700">{error}</pre>
+        <pre className="mt-2 overflow-auto text-xs" style={{ color: "var(--muted)" }}>{error}</pre>
       </div>
     );
   }
 
   return (
-    <div className="not-prose rounded-xl border bg-white p-4">
+    <div className="not-prose rounded-xl border p-4" style={{ background: "var(--card)" }}>
       {svg ? (
         <div dangerouslySetInnerHTML={{ __html: svg }} />
       ) : (
-        <div className="text-sm text-gray-600">Rendering diagram…</div>
+        <div className="text-sm" style={{ color: "var(--muted)" }}>Rendering diagram…</div>
       )}
     </div>
   );

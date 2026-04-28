@@ -24,6 +24,14 @@ export const projects: Project[] = [
     github: "https://github.com/bmickoski/react-entity-picker-lab",
   },
   {
+    title: "Devscope",
+    description:
+      "GitHub profile visualizer built with Angular 21. Signals, computed, toSignal() RxJS interop, functional HTTP interceptor, @defer for idle loading, and Chart.js behind a service boundary.",
+    tags: ["Angular 21", "TypeScript", "RxJS", "Signals", "Chart.js", "Vitest"],
+    demo: "https://devscope-psi.vercel.app",
+    github: "https://github.com/bmickoski/devscope",
+  },
+  {
     title: "Formly Form Builder",
     description:
       "Visual drag-and-drop form builder with a strict domain model. Left panel palette, center canvas with nested layout editing, right panel inspector, and live Formly preview.",

@@ -52,7 +52,7 @@ export default function HomePage() {
 
           <Link
             href="/contact"
-            className="rounded-md bg-black px-4 py-2 text-sm text-white hover:opacity-90"
+            className="btn-primary rounded-md px-4 py-2 text-sm hover:opacity-90"
           >
             Contact
           </Link>
